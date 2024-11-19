@@ -33,6 +33,31 @@ describe('MemberForm', () => {
     jest.resetAllMocks();
   });
 
+  const assertFields = async (
+    first_name: string,
+    last_name: string,
+    email: string,
+    phone_number: string
+    ) => {
+      expect(screen.getByLabelText(/first name/i)).toHaveValue(first_name);
+      expect(screen.getByLabelText(/last name/i)).toHaveValue(last_name);
+      expect(screen.getByLabelText(/email/i)).toHaveValue(email);
+      expect(screen.getByLabelText(/phone number/i)).toHaveValue(phone_number);
+  }
+
+  const fillFields = async (
+    user: any,
+    first_name: string,
+    last_name: string,
+    email: string,
+    phone_number: string
+    ) => {
+      await user.type(screen.getByLabelText(/first name/i), first_name);
+      await user.type(screen.getByLabelText(/last name/i), last_name);
+      await user.type(screen.getByLabelText(/email/i), email);
+      await user.type(screen.getByLabelText(/phone number/i), phone_number);
+  }
+
   const renderSetup = async (props: { mode: 'add' | 'edit'; id?: number }) => {
     await act(async () => {
       render(<MemberForm {...props} onNavigate={mockNavigate} />);
@@ -81,22 +106,14 @@ describe('MemberForm', () => {
     };
   };
 
-  // const expectErrorMessages = async (expectedErrors: string[]) => {
-  //   for (const errorMessage of expectedErrors) {
-  //     expect(screen.getByText(errorMessage)).toBeInTheDocument();
-  //   }
-  // };
-
   it('loads existing data in edit mode', async () => {
     
     const { resolveApiCall } = await setup({ mode: 'edit', id: 1 });
     await resolveApiCall(responseMemberData);
 
     expect(teamMemberApi.getById).toHaveBeenCalledWith(1);
-    expect(screen.getByLabelText(/first name/i)).toHaveValue('John');
-    expect(screen.getByLabelText(/last name/i)).toHaveValue('Doe');
-    expect(screen.getByLabelText(/email/i)).toHaveValue('john@example.com');
-    expect(screen.getByLabelText(/phone number/i)).toHaveValue('1234567890');
+    
+    assertFields('John', 'Doe', 'john@example.com', '1234567890')
   });
 
   it('shows loading state while fetching data', async () => {
@@ -136,10 +153,7 @@ describe('MemberForm', () => {
     const user = userEvent.setup();
 
     await act(async () => {
-      await user.type(screen.getByLabelText(/first name/i), 'John');
-      await user.type(screen.getByLabelText(/last name/i), 'Doe');
-      await user.type(screen.getByLabelText(/email/i), 'john@example.com');
-      await user.type(screen.getByLabelText(/phone number/i), '1234567890');
+      await fillFields(user, 'John', 'Doe', 'john@example.com', '1234567890')
     });
 
     await act(async () => {
@@ -194,20 +208,15 @@ describe('MemberForm', () => {
 
     // Fill form
     await act(async () => {
-      await user.type(screen.getByLabelText(/first name/i), 'John');
-      await user.type(screen.getByLabelText(/last name/i), 'Doe');
-      await user.type(screen.getByLabelText(/email/i), 'john@example.com');
-      await user.type(screen.getByLabelText(/phone number/i), 'abc123');
+      await fillFields(user, 'John', 'Doe', 'john@example.com', 'abc123')
     });
+
 
     // Submit form to trigger error
     await act(async () => {
       const submitButton = screen.getByRole('button', { name: /save/i });
       await user.click(submitButton);
     });
-
-    console.log("Pravin success error screen");
-    screen.debug();
 
     // Check error message is displayed
     expect(screen.getByText('Phone number must contain only digits.')).toBeInTheDocument();
@@ -249,10 +258,8 @@ describe('MemberForm', () => {
 
     // Fill form with invalid data
     await act(async () => {
-      await user.type(screen.getByLabelText(/first name/i), 'John');
-      await user.type(screen.getByLabelText(/last name/i), 'Doe');
-      await user.type(screen.getByLabelText(/email/i), 'john@example.com');
-      await user.type(screen.getByLabelText(/phone number/i), 'abc123');
+      // existing email
+      await fillFields(user, 'John', 'Doe', 'john@example.com', 'abc123');
     });
 
     await act(async () => {

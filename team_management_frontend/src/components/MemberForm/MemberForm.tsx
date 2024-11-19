@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { TeamMemberFormData, Page } from '../../types/teamMember';
 import { teamMemberApi } from '../../services/api';
-import { ROLES } from '../../utils/constants';
+import { ROLES, ROLE_LABELS } from '../../utils/constants';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 
 interface MemberFormProps {
@@ -261,25 +261,28 @@ export const MemberForm: React.FC<MemberFormProps> = ({ mode, id, onNavigate }) 
           )}
         </div>
 
-        <div className="space-y-4"> {/* Add this wrapper for better spacing */}
-  
-          <div>
-            <label className="block text-gray-700 mb-2">Role</label>
-            <div className="space-y-2 bg-gray-50 p-4 rounded-md border border-gray-200">
-              <label className="inline-flex items-center">
-                <input
-                  type="radio"
-                  name="role"
-                  value={ROLES.REGULAR}
-                  checked={formData.role === ROLES.REGULAR} 
-                  onChange={handleChange}
-                  className="form-radio text-blue-500 focus:ring-blue-500 h-4 w-4"
-                  disabled={isSaving}
-                />
-                <span className="ml-2 text-gray-700">Regular</span>
-              </label>
-              <div className="mt-2">
-                <label className="inline-flex items-center">
+        <fieldset className="space-y-4">
+          <legend className="block text-gray-700 mb-2 font-medium">Role</legend>
+          <div className="space-y-2 bg-gray-50 p-4 rounded-md border border-gray-200">
+            <div className="space-y-4">
+              <div>
+                <label className="inline-flex items-center cursor-pointer">
+                  <input
+                    type="radio"
+                    name="role"
+                    value={ROLES.REGULAR}
+                    checked={formData.role === ROLES.REGULAR}
+                    onChange={handleChange}
+                    className="form-radio text-blue-500 focus:ring-blue-500 h-4 w-4"
+                    disabled={isSaving}
+                  />
+                  <span className="ml-2 text-gray-700 font-medium">
+                    {ROLE_LABELS[ROLES.REGULAR]}
+                  </span>
+                </label>
+              </div>
+              <div>
+                <label className="inline-flex items-center cursor-pointer">
                   <input
                     type="radio"
                     name="role"
@@ -289,12 +292,14 @@ export const MemberForm: React.FC<MemberFormProps> = ({ mode, id, onNavigate }) 
                     className="form-radio text-blue-500 focus:ring-blue-500 h-4 w-4"
                     disabled={isSaving}
                   />
-                  <span className="ml-2 text-gray-700">Admin</span>
+                  <span className="ml-2 text-gray-700 font-medium">
+                    {ROLE_LABELS[ROLES.ADMIN]}
+                  </span>
                 </label>
               </div>
             </div>
           </div>
-        </div>
+        </fieldset>
 
         <div className="flex justify-between pt-4">
           {mode === 'edit' && (

@@ -44,8 +44,6 @@ class TeamMemberViewSet(viewsets.ModelViewSet, APIMixin):
     def create(self, request, *args, **kwargs):
         try:
             serializer = self.get_serializer(data=request.data)
-            print("data", request.data)
-            print("serializer", serializer)
             serializer.is_valid(raise_exception=True)
             self.perform_create(serializer)
             
