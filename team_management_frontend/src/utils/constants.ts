@@ -5,5 +5,5 @@ export const ROLES = {
 
 export const ROLE_LABELS = {
   [ROLES.REGULAR]: 'Regular - Can\'t delete members',
-  [ROLES.ADMIN]: 'Admin - Can delete users'
+  [ROLES.ADMIN]: 'Admin - Can delete members'
 } as const;
