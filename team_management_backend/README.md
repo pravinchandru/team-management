@@ -5,7 +5,7 @@ This repo contains the Django python code for team member management web app.
 ## Installation
 
 ```bash
-cd team_management/
+cd team_management_backend/
 python -m venv env
 source env/bin/activate
 pip install django djangorestframework django-cors-headers
